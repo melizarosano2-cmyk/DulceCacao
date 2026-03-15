@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-chocolate" style="font-family: var(--font-heading);">📦 Mis Pedidos</h1>
+                <p class="text-muted">Historial de tus compras</p>
+            </div>
+        </div>
+
+        <div th:if="${orders.isEmpty()}" class="text-center py-5 fade-in">
+            <div style="font-size: 5rem; margin-bottom: 20px; opacity: 0.3;">📦</div>
+            <h3 class="text-muted mb-4">Aún no tienes pedidos</h3>
+            <a th:href="@{/}" class="btn btn-primary">
+                Explorar Productos
+            </a>
+        </div>
+
+        <div th:unless="${orders.isEmpty()}">
+            <div class="row g-3">
+                <div class="col-12" th:each="order : ${orders}">
+                    <div class="card fade-in">
+                        <div class="card-header" style="background: var(--gray-light);">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <strong class="text-chocolate">Pedido #<span th:text="${order.id}">1</span></strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted">
+                                        📅 <span th:if="${order.orderDate != null}"
+                                            th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+                                        <span th:if="${order.orderDate == null}">Sin fecha</span>
+                                    </small>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong class="text-gold" style="font-family: var(--font-numbers);">
+                                        <span th:text="${'$' + order.total}">$0</span>
+                                    </strong>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <span th:if="${order.status == 'Entregado'}" class="badge bg-success">✓
+                                        Entregado</span>
+                                    <span th:if="${order.status == 'Pendiente'}" class="badge bg-warning text-dark">⏳
+                                        Pendiente</span>
+                                    <span th:if="${order.status == 'Cancelado'}" class="badge bg-danger">✗
+                                        Cancelado</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="text-muted mb-2">Detalles del Pedido</h6>
+                                    <p class="mb-1"><strong>Estado:</strong> <span
+                                            th:text="${order.status}">Estado</span></p>
+                                    <p class="mb-1"><strong>Fecha:</strong>
+                                        <span th:if="${order.orderDate != null}"
+                                            th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Fecha
+                                            completa</span>
+                                        <span th:if="${order.orderDate == null}">Sin fecha</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="d-flex flex-column gap-2">
+                                        <span class="text-muted" style="font-size: 0.875rem;">Total del Pedido</span>
+                                        <span class="text-gold"
+                                            style="font-size: 1.75rem; font-family: var(--font-numbers); font-weight: 700;"
+                                            th:text="${'$' + order.total}">$0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

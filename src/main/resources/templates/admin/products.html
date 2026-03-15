@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container-fluid mt-4 px-4 mb-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-chocolate">Gestión de Productos</h1>
+                <p class="text-muted">Administra el catálogo de productos</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <a href="/admin/products/new" class="btn btn-primary">
+                    ➕ Agregar Nuevo Producto
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Lista de Productos</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Imagen</th>
+                                        <th>Nombre</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="product : ${products}">
+                                        <td th:text="${product.id}">1</td>
+                                        <td>
+                                            <img th:src="${product.imageUrl}" alt="Producto"
+                                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        </td>
+                                        <td><strong th:text="${product.name}">Producto</strong></td>
+                                        <td><span class="badge bg-secondary"
+                                                th:text="${product.category.name}">Categoría</span></td>
+                                        <td class="text-gold"
+                                            style="font-family: var(--font-numbers); font-weight: 600;"
+                                            th:text="${'$' + product.price}">$0.00</td>
+                                        <td>
+                                            <span th:if="${product.stock > 20}" class="badge bg-success"
+                                                th:text="${product.stock}">0</span>
+                                            <span th:if="${product.stock > 10 && product.stock <= 20}"
+                                                class="badge bg-warning text-dark" th:text="${product.stock}">0</span>
+                                            <span th:if="${product.stock <= 10}" class="badge bg-danger"
+                                                th:text="${product.stock}">0</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}"
+                                                class="btn btn-sm btn-warning me-1">✏️ Editar</a>
+                                            <a th:href="@{/admin/products/delete/{id}(id=${product.id})}"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('¿Estás seguro de eliminar este producto?')">🗑️
+                                                Eliminar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

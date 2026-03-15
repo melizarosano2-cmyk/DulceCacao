@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container-fluid mt-4 px-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-chocolate">Panel de Administración</h1>
+                <p class="text-muted">Vista general del negocio y métricas clave</p>
+            </div>
+        </div>
+
+        <!-- KPI Cards Row -->
+        <div class="row mb-4 g-3">
+            <!-- Total Sales -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--gold-primary);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Ventas Totales</p>
+                                <h3 class="mb-0 text-gold" style="font-family: var(--font-numbers);"
+                                    th:text="${'$' + totalSales}">$0</h3>
+                            </div>
+                            <div class="text-gold" style="font-size: 2.5rem;">💰</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Orders -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--success);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Total Pedidos</p>
+                                <h3 class="mb-0" th:text="${totalOrders}">0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem;">📦</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Products -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--chocolate-medium);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Total Productos</p>
+                                <h3 class="mb-0" th:text="${totalProducts}">0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem;">🍫</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Employees -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--info);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Total Empleados</p>
+                                <h3 class="mb-0" th:text="${totalEmployees}">0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem;">👥</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="row mb-4 g-3">
+            <!-- Sales Trend -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Tendencia de Ventas - Últimos 30 Días</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="salesTrendChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Status -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Estado de Pedidos</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2 -->
+        <div class="row mb-4 g-3">
+            <!-- Top Products -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Productos Más Vendidos</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="topProductsChart" height="120"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue by Category -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Ingresos por Categoría</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="categoryRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">⚠️ Productos con Stock Bajo (menos de 20 unidades)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Stock Actual</th>
+                                        <th>Precio</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="product : ${lowStockProducts}">
+                                        <td th:text="${product.name}">Producto</td>
+                                        <td th:text="${product.category.name}">Categoría</td>
+                                        <td>
+                                            <span class="badge bg-danger" th:text="${product.stock}">0</span>
+                                        </td>
+                                        <td class="text-gold" style="font-family: var(--font-numbers);"
+                                            th:text="${'$' + product.price}">$0</td>
+                                        <td>
+                                            <span class="badge bg-warning text-dark"
+                                                th:if="${product.stock < 10}">Crítico</span>
+                                            <span class="badge bg-warning"
+                                                th:if="${product.stock >= 10 && product.stock < 20}">Bajo</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        // Color palette
+        const colors = {
+            gold: '#D4AF37',
+            goldLight: '#F4E4C1',
+            chocolate: '#3E2723',
+            chocolateMedium: '#6D4C41',
+            success: '#98D8C8',
+            danger: '#FF6F61',
+            warning: '#FFB74D'
+        };
+
+        // Sales Trend Chart
+        const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+
+        fetch('/api/v1/analytics/sales')
+            .then(response => response.json())
+            .then(data => {
+                const salesTrendChart = new Chart(salesTrendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: data.label,
+                            data: data.values,
+                            borderColor: colors.gold,
+                            backgroundColor: `${colors.gold}20`,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: colors.gold,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    font: {
+                                        family: 'Montserrat',
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: colors.chocolate,
+                                titleFont: {
+                                    family: 'Playfair Display',
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    family: 'Montserrat',
+                                    size: 12
+                                },
+                                padding: 12,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function (value) {
+                                        return '$' + value;
+                                    },
+                                    font: {
+                                        family: 'Lora'
+                                    }
+                                },
+                                grid: {
+                                    color: '#E0E0E0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Montserrat'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching sales data:', error));
+
+        // Order Status Pie Chart
+        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusChart = new Chart(orderStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Entregado', 'Pendiente', 'Cancelado'],
+                datasets: [{
+                    data: /*[[${orderStatusCounts}]]*/[30, 15, 5],
+                    backgroundColor: [colors.success, colors.warning, colors.danger],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Montserrat',
+                                size: 11
+                            },
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: colors.chocolate,
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                }
+            }
+        });
+
+        // Top Products Bar Chart
+        const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+        const topProductsChart = new Chart(topProductsCtx, {
+            type: 'bar',
+            data: {
+                labels: /*[[${topProductNames}]]*/['Bombón Avellana', 'Tableta 70%', 'Trufa Coco', 'Bombón Dulce de Leche', 'Tableta Almendras'],
+                datasets: [{
+                    label: 'Unidades Vendidas',
+                    data: /*[[${topProductSales}]]*/[45, 38, 32, 28, 25],
+                    backgroundColor: [
+                        colors.gold,
+                        colors.chocolateMedium,
+                        colors.success,
+                        colors.warning,
+                        colors.chocolate
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: colors.chocolate,
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E0E0E0'
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Montserrat'
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: 'Montserrat',
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Category Revenue Doughnut Chart
+        const categoryRevenueCtx = document.getElementById('categoryRevenueChart').getContext('2d');
+        const categoryRevenueChart = new Chart(categoryRevenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: /*[[${categoryNames}]]*/['Bombones', 'Tabletas', 'Trufas', 'Regalos'],
+                datasets: [{
+                    data: /*[[${categoryRevenues}]]*/[3500, 2800, 2200, 1500],
+                    backgroundColor: [
+                        colors.gold,
+                        colors.chocolateMedium,
+                        colors.success,
+                        colors.chocolate
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: {
+                                family: 'Montserrat',
+                                size: 11
+                            },
+                            padding: 15,
+                            generateLabels: function (chart) {
+                                const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                                    return data.labels.map((label, i) => {
+                                        const value = data.datasets[0].data[i];
+                                        return {
+                                            text: `${label}: $${value}`,
+                                            fillStyle: data.datasets[0].backgroundColor[i],
+                                            hidden: false,
+                                            index: i
+                                        };
+                                    });
+                                }
+                                return [];
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: colors.chocolate,
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': $' + context.parsed;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

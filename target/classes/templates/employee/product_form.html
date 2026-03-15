@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2>Producto</h2>
+                <form th:action="@{/employee/products}" th:object="${product}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                            required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Precio</label>
+                        <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="stock" th:field="*{stock}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Categoría</label>
+                        <select class="form-control" id="category" th:field="*{category.id}" required>
+                            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imageUrl" class="form-label">URL de Imagen</label>
+                        <input type="text" class="form-control" id="imageUrl" th:field="*{imageUrl}"
+                            placeholder="https://ejemplo.com/imagen.jpg">
+                        <small class="form-text text-muted">Ingresa la URL de la imagen del producto</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="/employee/products" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

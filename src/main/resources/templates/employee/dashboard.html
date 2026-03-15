@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container-fluid mt-4 px-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-chocolate">Panel de Empleado</h1>
+                <p class="text-muted">Gestión de productos y pedidos</p>
+            </div>
+        </div>
+
+        <!-- KPI Cards Row -->
+        <div class="row mb-4 g-3">
+            <!-- Today's Orders -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--gold-primary);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Pedidos Hoy</p>
+                                <h3 class="mb-0 text-gold" th:text="${todayOrders}">0</h3>
+                            </div>
+                            <div class="text-gold" style="font-size: 2.5rem;">📋</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Orders -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--warning);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Pedidos Pendientes</p>
+                                <h3 class="mb-0" style="color: var(--warning);" th:text="${pendingOrders}">0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem; color: var(--warning);">⏳</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products to Restock -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--danger);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Productos a Reponer</p>
+                                <h3 class="mb-0" style="color: var(--danger);" th:text="${lowStockCount}">0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem; color: var(--danger);">⚠️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Sales -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card fade-in" style="border-left: 4px solid var(--success);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1" style="font-size: 0.875rem;">Ventas del Día</p>
+                                <h3 class="mb-0" style="color: var(--success); font-family: var(--font-numbers);"
+                                    th:text="${'$' + todaySales}">$0</h3>
+                            </div>
+                            <div style="font-size: 2.5rem; color: var(--success);">💵</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4 g-3">
+            <!-- Today's Sales Chart -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Ventas del Día por Hora</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="todaySalesChart" height="80"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending vs Delivered -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Estado de Pedidos</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders Table -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Pedidos Recientes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cliente</th>
+                                        <th>Fecha</th>
+                                        <th>Total</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="order : ${recentOrders}">
+                                        <td th:text="${order.id}">#1</td>
+                                        <td th:text="${order.cliente.fullName}">Cliente</td>
+                                        <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">
+                                            01/01/2024</td>
+                                        <td class="text-gold" style="font-family: var(--font-numbers);"
+                                            th:text="${'$' + order.total}">$100</td>
+                                        <td>
+                                            <span th:if="${order.status == 'Entregado'}"
+                                                class="badge bg-success">Entregado</span>
+                                            <span th:if="${order.status == 'Pendiente'}"
+                                                class="badge bg-warning text-dark">Pendiente</span>
+                                            <span th:if="${order.status == 'Cancelado'}"
+                                                class="badge bg-danger">Cancelado</span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/employee/orders}" class="btn btn-sm btn-primary">Ver
+                                                Detalles</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Low Stock Products -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">⚠️ Productos con Stock Bajo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Stock Actual</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="product : ${lowStockProducts}">
+                                        <td th:text="${product.name}">Producto</td>
+                                        <td th:text="${product.category.name}">Categoría</td>
+                                        <td>
+                                            <span class="badge bg-danger" th:if="${product.stock < 10}"
+                                                th:text="${product.stock}">0</span>
+                                            <span class="badge bg-warning"
+                                                th:if="${product.stock >= 10 && product.stock < 20}"
+                                                th:text="${product.stock}">0</span>
+                                        </td>
+                                        <td class="text-gold" style="font-family: var(--font-numbers);"
+                                            th:text="${'$' + product.price}">$0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        const colors = {
+            gold: '#D4AF37',
+            chocolate: '#3E2723',
+            success: '#98D8C8',
+            warning: '#FFB74D',
+            danger: '#FF6F61'
+        };
+
+        // Today's Sales Chart
+        const todaySalesCtx = document.getElementById('todaySalesChart').getContext('2d');
+        const todaySalesChart = new Chart(todaySalesCtx, {
+            type: 'line',
+            data: {
+                labels: ['9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+                datasets: [{
+                    label: 'Ventas ($)',
+                    data: [120, 150, 180, 250, 300, 280, 320, 290, 260, 200],
+                    borderColor: colors.gold,
+                    backgroundColor: `${colors.gold}20`,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: colors.gold,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: colors.chocolate,
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return '$' + value;
+                            },
+                            font: { family: 'Lora' }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Order Status Chart
+        const orderStatusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const orderStatusChart = new Chart(orderStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Entregado', 'Pendiente'],
+                datasets: [{
+                    data: /*[[${orderStatusData}]]*/[15, 5],
+                    backgroundColor: [colors.success, colors.warning],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Montserrat', size: 11 },
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

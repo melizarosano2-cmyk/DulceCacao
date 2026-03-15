@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="/employee/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
+                    <a href="/employee/products" class="list-group-item list-group-item-action">Productos</a>
+                    <a href="/employee/orders" class="list-group-item list-group-item-action active">Pedidos</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2>Gestión de Pedidos</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.id}">1</td>
+                            <td th:text="${order.cliente.fullName}">Cliente</td>
+                            <td th:text="${order.cliente.direccion}">Dirección</td>
+                            <td th:text="${order.cliente.telefono}">Teléfono</td>
+                            <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2025</td>
+                            <td th:text="${'$' + order.total}">$0.00</td>
+                            <td>
+                                <span class="badge" th:classappend="${order.status == 'Entregado'} ? 'bg-success' : 
+                                                      (${order.status == 'Cancelado'} ? 'bg-danger' : 'bg-warning')"
+                                    th:text="${order.status}">Estado</span>
+                            </td>
+                            <td>
+                                <form th:action="@{/employee/orders/{id}/status(id=${order.id})}" method="post"
+                                    class="d-inline">
+                                    <select name="status" class="form-select form-select-sm d-inline-block w-auto">
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="En Preparación">En Preparación</option>
+                                        <option value="Listo para Envío">Listo para Envío</option>
+                                        <option value="En Camino">En Camino</option>
+                                        <option value="Entregado">Entregado</option>
+                                        <option value="Cancelado">Cancelado</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

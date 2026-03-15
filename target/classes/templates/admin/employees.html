@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group">
+                    <a href="/admin/dashboard" class="list-group-item list-group-item-action">Dashboard</a>
+                    <a href="/admin/products" class="list-group-item list-group-item-action">Products</a>
+                    <a href="/admin/employees" class="list-group-item list-group-item-action active">Employees</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <h2>Employees</h2>
+                <a href="/admin/employees/new" class="btn btn-primary mb-3">Add Employee</a>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="employee : ${employees}">
+                            <td th:text="${employee.id}">1</td>
+                            <td th:text="${employee.username}">user</td>
+                            <td th:text="${employee.email}">email@example.com</td>
+                            <td th:text="${employee.fullName}">Name</td>
+                            <td>
+                                <a th:href="@{/admin/employees/delete/{id}(id=${employee.id})}"
+                                    class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

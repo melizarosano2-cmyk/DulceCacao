@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body style="background: linear-gradient(135deg, var(--cream) 0%, var(--gray-light) 100%);">
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg fade-in" style="border: none; border-radius: 16px;">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <div style="font-size: 4rem; margin-bottom: 20px;">🍫</div>
+                            <h2 class="text-chocolate mb-2" style="font-family: var(--font-heading);">Iniciar Sesión
+                            </h2>
+                            <p class="text-muted">Bienvenido de vuelta a Dulce Cacao</p>
+                        </div>
+
+                        <div th:if="${message}" class="alert alert-success fade-in" th:text="${message}"></div>
+                        <div th:if="${error}" class="alert alert-danger fade-in" th:text="${error}"></div>
+
+                        <form th:action="@{/login}" method="post">
+                            <div class="mb-4">
+                                <label for="username" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    placeholder="Ingresa tu usuario" required autofocus>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Ingresa tu contraseña" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mb-3" style="padding: 12px;">
+                                Iniciar Sesión
+                            </button>
+
+                            <div class="text-center">
+                                <a th:href="@{/forgot-password}" class="text-gold" style="font-size: 0.875rem;">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted mb-2" style="font-size: 0.875rem;">¿No tienes una cuenta?</p>
+                            <a th:href="@{/register}" class="btn btn-secondary w-100">
+                                Crear Cuenta Nueva
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

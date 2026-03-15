@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <div class="container mt-4 mb-5">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="text-chocolate" style="font-family: var(--font-heading);">🛒 Mi Carrito</h1>
+                <p class="text-muted">Revisa tus productos antes de finalizar la compra</p>
+            </div>
+        </div>
+
+        <div th:if="${cartItems.isEmpty()}" class="text-center py-5 fade-in">
+            <div style="font-size: 5rem; margin-bottom: 20px; opacity: 0.3;">🛒</div>
+            <h3 class="text-muted mb-4">Tu carrito está vacío</h3>
+            <a th:href="@{/}" class="btn btn-primary">
+                Explorar Productos
+            </a>
+        </div>
+
+        <div th:unless="${cartItems.isEmpty()}">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4 fade-in">
+                        <div class="card-header">
+                            <h5 class="mb-0">Productos en tu Carrito</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px;">Imagen</th>
+                                            <th>Producto</th>
+                                            <th style="width: 120px;">Precio</th>
+                                            <th style="width: 120px;">Cantidad</th>
+                                            <th style="width: 120px;">Subtotal</th>
+                                            <th style="width: 80px;">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${cartItems}">
+                                            <td>
+                                                <img th:src="${item.product.imageUrl}" alt="Producto"
+                                                    style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                                            </td>
+                                            <td class="align-middle">
+                                                <h6 class="mb-1" th:text="${item.product.name}">Producto</h6>
+                                                <small class="text-muted"
+                                                    th:text="${item.product.category.name}">Categoría</small>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="text-gold"
+                                                    style="font-family: var(--font-numbers); font-weight: 600;"
+                                                    th:text="${'$' + item.product.price}">$0</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="badge bg-secondary"
+                                                    style="font-size: 1rem; padding: 8px 16px;"
+                                                    th:text="${item.quantity}">1</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <strong class="text-chocolate" style="font-family: var(--font-numbers);"
+                                                    th:text="${'$' + item.subtotal}">$0</strong>
+                                            </td>
+                                            <td class="align-middle">
+                                                <a th:href="@{/cart/remove/{id}(id=${item.product.id})}"
+                                                    class="btn btn-sm btn-danger">
+                                                    ✕
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card fade-in" style="position: sticky; top: 100px;">
+                        <div class="card-header"
+                            style="background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);">
+                            <h5 class="mb-0 text-chocolate">Resumen del Pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Subtotal:</span>
+                                <span class="text-chocolate" style="font-family: var(--font-numbers);"
+                                    th:text="${'$' + total}">$0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">Envío:</span>
+                                <span class="text-success">Gratis</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <strong class="text-chocolate">Total:</strong>
+                                <strong class="text-gold" style="font-size: 1.5rem; font-family: var(--font-numbers);"
+                                    th:text="${'$' + total}">$0</strong>
+                            </div>
+
+                            <form th:action="@{/cart/checkout}" method="post">
+                                <button type="submit" class="btn btn-primary w-100 mb-2" style="padding: 12px;">
+                                    Finalizar Compra
+                                </button>
+                            </form>
+
+                            <a th:href="@{/}" class="btn btn-secondary w-100">
+                                Seguir Comprando
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

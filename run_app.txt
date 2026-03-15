@@ -1,0 +1,4 @@
+@echo off
+echo Starting Chocolate Shop Application...
+call mvnw.cmd spring-boot:run
+pause

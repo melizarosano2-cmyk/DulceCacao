@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section"
+        style="background: linear-gradient(135deg, var(--chocolate-dark) 0%, var(--chocolate-medium) 100%); padding: 80px 0; margin-bottom: 60px;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 text-white">
+                    <h1 class="display-3 mb-4 fade-in"
+                        style="font-family: var(--font-heading); color: var(--gold-light);">
+                        Dulce Cacao
+                    </h1>
+                    <p class="lead mb-4 fade-in" style="font-size: 1.25rem; color: var(--cream);">
+                        Chocolates artesanales de la más alta calidad. Cada pieza es una obra de arte creada con pasión
+                        y dedicación.
+                    </p>
+                    <a href="#productos" class="btn btn-primary btn-lg fade-in">
+                        Explorar Productos
+                    </a>
+                </div>
+                <div class="col-lg-6 text-center fade-in">
+                    <div style="font-size: 200px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));">
+                        🍫
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <div class="container mb-5" id="productos">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2 class="text-chocolate mb-2" style="font-family: var(--font-heading);">Nuestros Productos</h2>
+                <p class="text-muted">Descubre nuestra selección de chocolates premium</p>
+                <div style="width: 80px; height: 3px; background: var(--gold-primary); margin: 20px auto;"></div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-4 col-sm-6" th:each="product : ${products}">
+                <div class="card product-card h-100 fade-in">
+                    <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+                        <img th:src="${product.imageUrl}" class="card-img-top" alt="Imagen del producto"
+                            style="height: 250px; object-fit: cover; transition: transform 0.5s;">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge mb-2"
+                            style="background: var(--gold-light); color: var(--chocolate-dark); width: fit-content; font-size: 0.75rem;"
+                            th:text="${product.category.name}">Categoría</span>
+                        <h5 class="card-title mb-2" th:text="${product.name}">Nombre del Producto</h5>
+                        <p class="card-text text-muted flex-grow-1" style="font-size: 0.875rem; line-height: 1.5;"
+                            th:text="${product.description}">Descripción</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="product-price" th:text="${'$' + product.price}">$0.00</span>
+                            <span class="text-muted" style="font-size: 0.875rem;">
+                                <span th:if="${product.stock > 10}">✓ En stock</span>
+                                <span th:if="${product.stock <= 10 && product.stock > 0}" class="text-warning">⚠ Pocas
+                                    unidades</span>
+                                <span th:if="${product.stock == 0}" class="text-danger">✗ Agotado</span>
+                            </span>
+                        </div>
+                        <button th:if="${product.stock > 0}" type="button" class="btn btn-primary w-100 mt-3" 
+                                data-bs-toggle="modal" data-bs-target="#quantityModal"
+                                th:data-product-id="${product.id}"
+                                th:data-product-name="${product.name}"
+                                th:data-product-price="${product.price}"
+                                th:data-product-stock="${product.stock}">
+                            Agregar al Carrito
+                        </button>
+                        <button th:if="${product.stock == 0}" type="button" class="btn btn-secondary w-100 mt-3 disabled">Agotado</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section style="background: var(--gray-light); padding: 60px 0; margin-top: 80px;">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4 text-center fade-in">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">🏆</div>
+                    <h4 class="text-chocolate mb-3">Calidad Premium</h4>
+                    <p class="text-muted">Ingredientes seleccionados de la más alta calidad</p>
+                </div>
+                <div class="col-md-4 text-center fade-in">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">🚚</div>
+                    <h4 class="text-chocolate mb-3">Envío Rápido</h4>
+                    <p class="text-muted">Entrega en 24-48 horas a todo el país</p>
+                </div>
+                <div class="col-md-4 text-center fade-in">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">💝</div>
+                    <h4 class="text-chocolate mb-3">Regalos Especiales</h4>
+                    <p class="text-muted">Packaging premium para ocasiones especiales</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quantity Modal -->
+    <div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: 2px solid var(--gold-primary); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div class="modal-header" style="background: var(--chocolate-dark); color: var(--gold-light); border-bottom: none;">
+                    <h5 class="modal-title" id="quantityModalLabel" style="font-family: var(--font-heading);">Agregar al Carrito</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addToCartForm" method="get">
+                    <div class="modal-body text-center" style="background: var(--cream); color: var(--chocolate-dark); padding: 30px;">
+                        <h4 id="modalProductName" class="mb-3" style="font-family: var(--font-heading); color: var(--chocolate-dark);">Nombre Producto</h4>
+                        <p class="text-muted mb-4">Selecciona la cantidad que deseas agregar:</p>
+                        
+                        <div class="d-flex justify-content-center align-items-center mb-4">
+                            <button type="button" onclick="decrementQuantity()" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold-primary); background: transparent; color: var(--chocolate-dark); font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;">-</button>
+                            <input type="number" id="modalQuantity" name="quantity" class="form-control text-center mx-3" value="1" min="1" style="width: 80px; border: 2px solid var(--gold-primary); font-weight: bold; height: 40px; font-size: 1.2rem; background: white;">
+                            <button type="button" onclick="incrementQuantity()" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold-primary); background: var(--chocolate-dark); color: var(--gold-light); font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer;">+</button>
+                        </div>
+                        
+                        <div class="p-3 mb-2" style="background: white; border-radius: 8px; border: 1px dashed var(--gold-primary);">
+                            <span style="font-size: 1.1rem; color: var(--chocolate-medium);">Total a pagar: </span>
+                            <span id="modalTotalPrice" style="font-size: 1.5rem; color: var(--gold-primary); font-weight: bold; font-family: var(--font-heading);">$0.00</span>
+                        </div>
+                        <small id="modalStockWarning" class="text-muted" style="font-weight: 500;">Stock disponible: <span id="modalMaxStock"></span> unidades</small>
+                    </div>
+                    <div class="modal-footer" style="background: var(--cream); border-top: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between;">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 20px; padding: 8px 20px;">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 20px; padding: 8px 30px; font-weight: bold;">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPrice = 0;
+        let maxStock = 0;
+
+        const quantityModal = document.getElementById('quantityModal');
+        quantityModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-product-id');
+            const name = button.getAttribute('data-product-name');
+            currentPrice = parseFloat(button.getAttribute('data-product-price'));
+            maxStock = parseInt(button.getAttribute('data-product-stock'));
+
+            document.getElementById('modalProductName').textContent = name;
+            document.getElementById('modalMaxStock').textContent = maxStock;
+            
+            const form = document.getElementById('addToCartForm');
+            form.action = '/cart/add/' + id;
+            
+            const input = document.getElementById('modalQuantity');
+            input.value = 1;
+            input.max = maxStock;
+            
+            updateTotal();
+        });
+
+        const quantityInput = document.getElementById('modalQuantity');
+        quantityInput.addEventListener('input', function() {
+            if (this.value < 1) this.value = 1;
+            if (this.value > maxStock) this.value = maxStock;
+            updateTotal();
+        });
+
+        function incrementQuantity() {
+            if (parseInt(quantityInput.value) < maxStock) {
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+                updateTotal();
+            }
+        }
+
+        function decrementQuantity() {
+            if (parseInt(quantityInput.value) > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+                updateTotal();
+            }
+        }
+
+        function updateTotal() {
+            const total = currentPrice * parseInt(quantityInput.value);
+            document.getElementById('modalTotalPrice').textContent = '$' + total.toFixed(2);
+        }
+    </script>
+
+    <footer th:replace="layout :: footer"></footer>
+
+    <style>
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .fade-in:nth-child(2) {
+            animation-delay: 0.2s;
+            animation-fill-mode: backwards;
+        }
+
+        .fade-in:nth-child(3) {
+            animation-delay: 0.4s;
+            animation-fill-mode: backwards;
+        }
+    </style>
+</body>
+
+</html>
