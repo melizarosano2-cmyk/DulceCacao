@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Etapa de ejecución (Run)
-FROM openjdk:17-slim
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 # Copiar el JAR generado en la etapa anterior
 COPY --from=build /app/target/shop-0.0.1-SNAPSHOT.jar app.jar
