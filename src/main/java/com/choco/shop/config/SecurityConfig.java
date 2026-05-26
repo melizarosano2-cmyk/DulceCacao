@@ -21,6 +21,7 @@ public class SecurityConfig {
                                                                 "/verify-email**", "/verification-sent",
                                                                 "/forgot-password**", "/reset-password**",
                                                                 "/reset-sent",
+                                                                "/access-denied",
                                                                 "/api/v1/products/**", // Public API
                                                                 "/swagger-ui/**", "/v3/api-docs/**") // Swagger Docs
                                                 .permitAll()
@@ -33,7 +34,10 @@ public class SecurityConfig {
                                                 .loginPage("/login")
                                                 .defaultSuccessUrl("/", true)
                                                 .permitAll())
-                                .logout((logout) -> logout.permitAll());
+                                .logout((logout) -> logout.permitAll())
+                                .exceptionHandling((exception) -> exception
+                                                .accessDeniedPage("/access-denied"));
+
 
                 return http.build();
         }
