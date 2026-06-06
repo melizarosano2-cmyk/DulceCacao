@@ -95,26 +95,28 @@
 
         <!-- Chatbot -->
         <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-            <button id="chatbot-toggle" class="btn btn-primary rounded-circle"
-                style="width: 60px; height: 60px; font-size: 24px;">
+            <button id="chatbot-toggle" class="btn btn-primary rounded-circle shadow-lg"
+                style="width: 60px; height: 60px; font-size: 24px; padding: 0; display: flex; align-items: center; justify-content: center;">
                 💬
             </button>
             <div id="chatbot-window" class="card shadow"
-                style="display: none; width: 300px; height: 400px; position: absolute; bottom: 80px; right: 0; z-index: 10000;">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                style="display: none; width: 350px; height: 480px; position: absolute; bottom: 80px; right: 0; z-index: 10000; border: 1px solid var(--gold-primary);">
+                <div class="card-header d-flex justify-content-between align-items-center" style="padding: 12px 15px;">
                     <h5 class="mb-0">Asistente Virtual</h5>
-                    <button id="chatbot-close" class="btn btn-sm btn-light" style="font-weight: bold;">&times;</button>
+                    <button id="chatbot-close" class="btn btn-sm btn-light" style="font-weight: bold; padding: 2px 8px; font-size: 16px;">&times;</button>
                 </div>
-                <div class="card-body d-flex flex-column" style="height: 300px;">
+                <div class="card-body d-flex flex-column" style="padding: 15px; height: calc(100% - 50px);">
                     <div id="chatbot-messages" class="flex-grow-1 overflow-auto mb-3"
-                        style="border: 1px solid #eee; padding: 10px; border-radius: 5px; background-color: #f9f9f9;">
-                        <div class="text-start mb-2"><span
-                                class="bg-light p-2 rounded d-inline-block text-dark border">¡Hola! ¿En qué puedo
-                                ayudarte hoy?</span></div>
+                        style="border: 1px solid var(--gray-medium); padding: 12px; border-radius: var(--radius-md); background-color: var(--white); font-size: 0.9rem;">
+                        <div class="text-start mb-2">
+                            <span class="bg-light p-2 rounded d-inline-block text-dark border" style="max-width: 85%;">
+                                ¡Hola! 🍫 Bienvenido a Dulce Cacao. ¿En qué puedo ayudarte hoy?
+                            </span>
+                        </div>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="chatbot-input" class="form-control" placeholder="Escribe tu consulta...">
-                        <button id="chatbot-send" class="btn btn-primary">Enviar</button>
+                        <input type="text" id="chatbot-input" class="form-control" placeholder="Escribe tu consulta..." style="padding: 8px 12px; font-size: 0.9rem;">
+                        <button id="chatbot-send" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.85rem;">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -146,6 +148,7 @@
                     div.className = isUser ? 'text-end mb-2' : 'text-start mb-2';
                     const span = document.createElement('span');
                     span.className = isUser ? 'bg-primary text-white p-2 rounded d-inline-block' : 'bg-light p-2 rounded d-inline-block text-dark border';
+                    span.style.maxWidth = '85%';
                     span.textContent = text;
                     div.appendChild(span);
                     messages.appendChild(div);
@@ -153,22 +156,36 @@
                 }
 
                 function processMessage(text) {
-                    const lowerText = text.toLowerCase();
-                    let response = "Disculpa, no entendí tu consulta. Por favor contáctanos al teléfono oficial.";
+                    const lowerText = text.toLowerCase().trim();
+                    let response = "Disculpa, no entendí tu consulta. Puedes contactarnos por correo a dulcecacaochocolateria1@gmail.com o a nuestro teléfono oficial para ayudarte mejor.";
 
-                    if (lowerText.includes('hola') || lowerText.includes('buenos')) {
-                        response = "¡Hola! Bienvenido a Dulce Cacao.";
-                    } else if (lowerText.includes('horario') || lowerText.includes('hora') || lowerText.includes('abierto')) {
-                        response = "Nuestro horario de atención es de Lunes a Viernes de 9:00 a 18:00 hs.";
-                    } else if (lowerText.includes('envio') || lowerText.includes('entrega') || lowerText.includes('domicilio')) {
-                        response = "Realizamos envíos a todo el país. El tiempo estimado es de 24-48 horas.";
-                    } else if (lowerText.includes('producto') || lowerText.includes('chocolate') || lowerText.includes('precio')) {
-                        response = "Tenemos una gran variedad de chocolates artesanales. ¡Revisa nuestro catálogo en la página de inicio!";
-                    } else if (lowerText.includes('contacto') || lowerText.includes('telefono')) {
-                        response = "Puedes contactarnos al +598 99 123 456.";
+                    if (lowerText.includes('hola') || lowerText.includes('buenos') || lowerText.includes('buenas') || lowerText.includes('saludo')) {
+                        response = "¡Hola! 🍫 Bienvenido a Dulce Cacao. ¿En qué puedo asesorarte hoy?";
+                    } else if (lowerText.includes('horario') || lowerText.includes('hora') || lowerText.includes('abierto') || lowerText.includes('cierran')) {
+                        response = "Nuestro horario de atención es de Lunes a Viernes de 9:00 a 18:00 hs. Sábados y domingos estamos cerrados.";
+                    } else if (lowerText.includes('envio') || lowerText.includes('entrega') || lowerText.includes('domicilio') || lowerText.includes('enviar')) {
+                        response = "Realizamos envíos a domicilio en Montevideo y a todo el país. Los envíos suelen demorar entre 24 y 48 horas hábiles.";
+                    } else if (lowerText.includes('producto') || lowerText.includes('chocolate') || lowerText.includes('precio') || lowerText.includes('catalogo') || lowerText.includes('comprar')) {
+                        response = "Ofrecemos chocolates artesanales de la más alta calidad: bombones, tabletas, trufas y cajas de regalo. Puedes ver el catálogo completo y precios en nuestra página de inicio.";
+                    } else if (lowerText.includes('contacto') || lowerText.includes('telefono') || lowerText.includes('llamar') || lowerText.includes('whatsapp') || lowerText.includes('celular')) {
+                        response = "Puedes llamarnos o enviarnos un WhatsApp al +598 99 123 456, o escribirnos al correo dulcecacaochocolateria1@gmail.com.";
+                    } else if (lowerText.includes('donde') || lowerText.includes('direccion') || lowerText.includes('ubicacion') || lowerText.includes('local') || lowerText.includes('tienda') || lowerText.includes('fisica')) {
+                        response = "Nuestra chocolatería artesanal está ubicada en Montevideo, Uruguay. Realizamos despachos directos desde nuestro taller.";
+                    } else if (lowerText.includes('pago') || lowerText.includes('tarjeta') || lowerText.includes('efectivo') || lowerText.includes('comopagar') || lowerText.includes('mercadopago')) {
+                        response = "Aceptamos tarjetas de crédito y débito (Visa, Mastercard, etc.), transferencia bancaria directa y pagos en efectivo al momento del retiro.";
+                    } else if (lowerText.includes('azucar') || lowerText.includes('diabetico') || lowerText.includes('sin azucar') || lowerText.includes('dietetico') || lowerText.includes('gluten') || lowerText.includes('celiaco') || lowerText.includes('sin tacc')) {
+                        response = "¡Sí! Contamos con una línea especial de tabletas con 70% y 85% de cacao sin azúcar agregada, y bombones aptos para celíacos. Revisa los detalles de cada producto en la tienda.";
+                    } else if (lowerText.includes('regalo') || lowerText.includes('caja') || lowerText.includes('presente') || lowerText.includes('personalizado') || lowerText.includes('evento') || lowerText.includes('boda')) {
+                        response = "Diseñamos cajas especiales para regalos corporativos, cumpleaños y eventos. Escríbenos a nuestro email para recibir un catálogo de souvenirs personalizado.";
+                    } else if (lowerText.includes('descuento') || lowerText.includes('promo') || lowerText.includes('oferta') || lowerText.includes('cupon')) {
+                        response = "Regístrate en nuestra web y mantente atento a las promociones de temporada (como Pascua, Día de la Madre y Navidad), donde ofrecemos descuentos especiales a nuestros clientes.";
+                    } else if (lowerText.includes('cacao') || lowerText.includes('calidad') || lowerText.includes('origen') || lowerText.includes('artesanal')) {
+                        response = "Trabajamos con granos de cacao seleccionados de origen fino (principalmente Ecuador y Colombia). Elaboramos nuestros chocolates artesanalmente sin conservantes.";
+                    } else if (lowerText.includes('recomiendas') || lowerText.includes('favorito') || lowerText.includes('rico') || lowerText.includes('mejor')) {
+                        response = "Te recomendamos probar nuestro aclamado 'Bombón de Avellana' y la 'Tableta con 70% Cacao'. ¡Son los favoritos de nuestros clientes!";
                     }
 
-                    setTimeout(() => addMessage(response, false), 500);
+                    setTimeout(() => addMessage(response, false), 400);
                 }
 
                 if (sendBtn) {
@@ -191,6 +208,7 @@
                 }
             });
         </script>
+
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

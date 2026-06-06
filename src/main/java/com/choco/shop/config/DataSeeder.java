@@ -59,7 +59,7 @@ public class DataSeeder implements CommandLineRunner {
                         // Admin
                         User admin = new User();
                         admin.setUsername("admin");
-                        admin.setPassword(passwordEncoder.encode("admin123"));
+                        admin.setPassword(passwordEncoder.encode("Admin123!"));
                         admin.setEmail("admin@dulcecacao.com");
                         admin.setFullName("Admin User");
                         admin.setActive(true);
@@ -70,7 +70,7 @@ public class DataSeeder implements CommandLineRunner {
                         // Employee
                         Empleado employee = new Empleado();
                         employee.setUsername("employee");
-                        employee.setPassword(passwordEncoder.encode("employee123"));
+                        employee.setPassword(passwordEncoder.encode("Employee123!"));
                         employee.setEmail("employee@dulcecacao.com");
                         employee.setFullName("Employee User");
                         employee.setActive(true);
@@ -84,8 +84,9 @@ public class DataSeeder implements CommandLineRunner {
                         for (int i = 1; i <= 5; i++) {
                                 Cliente customer = new Cliente();
                                 customer.setUsername("customer" + i);
-                                customer.setPassword(passwordEncoder.encode("password"));
+                                customer.setPassword(passwordEncoder.encode("Customer123!"));
                                 customer.setEmail("customer" + i + "@example.com");
+
                                 customer.setFullName("Customer " + i);
                                 customer.setActive(true);
                                 customer.setEmailVerified(true);

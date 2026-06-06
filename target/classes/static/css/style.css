@@ -309,6 +309,17 @@ a:hover {
     border-bottom: 2px solid var(--gold-primary);
 }
 
+.card-header h1,
+.card-header h2,
+.card-header h3,
+.card-header h4,
+.card-header h5,
+.card-header h6 {
+    color: var(--gold-light) !important;
+    margin-bottom: 0;
+}
+
+
 .card-body {
     padding: var(--spacing-lg);
 }

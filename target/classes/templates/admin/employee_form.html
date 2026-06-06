@@ -17,8 +17,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                        <input type="password" class="form-control" id="password" th:field="*{password}" required
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._\-#]).{8,}$"
+                            title="La contraseña debe tener al menos 8 caracteres, e incluir al menos una mayúscula, una minúscula, un número y un carácter especial (@, $, !, %, *, ?, &, ., _, -, #)">
+                        <div class="form-text text-muted" style="font-size: 0.8rem;">
+                            Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (@, $, !, %, *, ?, &, ., _, -, #).
+                        </div>
                     </div>
+
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" th:field="*{email}" required>

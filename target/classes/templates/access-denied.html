@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head"></head>
+
+<body>
+    <nav th:replace="layout :: navbar"></nav>
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-danger shadow-lg">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-4 text-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" class="bi bi-shield-lock" viewBox="0 0 16 16">
+                                <path d="M5.385 1.173a.5.5 0 0 0-.1.25L5.18 2.03a.5.5 0 0 1-.492.41H3.5a.5.5 0 0 0-.5.5v1.074c0 .356.12.7.34 1l.73.972a.5.5 0 0 1 .12.316V8.5a.5.5 0 0 0 .5.5h1.5a.5.5 0 0 0 .5-.5V6.3a.5.5 0 0 1 .12-.316l.73-.972a1 1 0 0 0 .22-.614V3.44a.5.5 0 0 0-.5-.5H6.837a.5.5 0 0 1-.492-.41l-.106-.607a.5.5 0 0 0-.1-.25L5.385 1.173z"/>
+                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99 1.694 2.22 3.829 3.516 5.102 4.143a.79.79 0 0 0 .584 0c1.273-.627 3.408-1.923 5.102-4.143 1.678-2.195 3.061-5.513 2.465-9.99a1.54 1.54 0 0 0-1.044-1.263 62.439 62.439 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm0 1.002c.566 0 1.611.246 2.68.54.982.268 1.986.582 2.6.784a.54.54 0 0 1 .364.444c.487 3.652-.6 6.36-2.022 8.223-1.442 1.887-3.238 2.997-4.28 3.513a.138.138 0 0 1-.084 0c-1.042-.516-2.838-1.626-4.28-3.513C1.6 8.706.513 5.998.999 2.346a.54.54 0 0 1 .364-.444c.614-.202 1.618-.516 2.6-.784C5.389 1.248 6.434 1.002 8 1.002z"/>
+                                <path d="M8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </div>
+                        <h2 class="card-title text-danger mb-3">Acceso Denegado</h2>
+                        <p class="lead">Lo sentimos, no tienes permisos para acceder a esta sección.</p>
+                        <p class="text-muted">Esta área es de acceso restringido para roles autorizados.</p>
+                        <hr class="my-4">
+                        <a th:href="@{/}" class="btn btn-danger btn-lg px-4">Volver al Inicio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+
+</html>

@@ -42,8 +42,11 @@
                             <div class="mb-3">
                                 <label for="password" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="password" th:field="*{password}"
-                                    placeholder="Mínimo 6 caracteres" required>
+                                    placeholder="Mínimo 8 caracteres (A-Z, a-z, 0-9, especial)" required
+                                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._\-#]).{8,}$"
+                                    title="La contraseña debe tener al menos 8 caracteres, e incluir al menos una mayúscula, una minúscula, un número y un carácter especial (@, $, !, %, *, ?, &, ., _, -, #)">
                             </div>
+
 
                             <div class="mb-3">
                                 <label for="direccion" class="form-label">Dirección</label>
