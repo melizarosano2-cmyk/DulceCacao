@@ -6,6 +6,29 @@
 <body>
     <nav th:replace="layout :: navbar"></nav>
 
+    <div class="container mt-3" th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show fade-in" role="alert" style="border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div class="d-flex align-items-center">
+                <span style="font-size: 1.5rem; margin-right: 12px;">🎉</span>
+                <div>
+                    <strong th:text="${message}">¡Pedido realizado con éxito!</strong>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="container mt-3" th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show fade-in" role="alert" style="border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <div class="d-flex align-items-center">
+                <span style="font-size: 1.5rem; margin-right: 12px;">⚠️</span>
+                <div>
+                    <strong th:text="${error}">Error</strong>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
     <div class="container mt-4 mb-5">
         <div class="row mb-4">
             <div class="col-12">

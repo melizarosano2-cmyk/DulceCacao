@@ -36,6 +36,7 @@ public class DataSeeder implements CommandLineRunner {
                 seedUsers();
                 seedCategoriesAndProducts();
                 seedOrders();
+                seedFavicon();
         }
 
         private void seedRoles() {
@@ -194,14 +195,43 @@ public class DataSeeder implements CommandLineRunner {
 
                                         BigDecimal total = BigDecimal.ZERO;
                                         int itemCount = random.nextInt(5) + 1;
+                                        List<OrderItem> items = new java.util.ArrayList<>();
                                         for (int j = 0; j < itemCount; j++) {
                                                 Product p = products.get(random.nextInt(products.size()));
-                                                total = total.add(p.getPrice());
+                                                OrderItem item = new OrderItem();
+                                                item.setOrder(order);
+                                                item.setProduct(p);
+                                                item.setQuantity(random.nextInt(3) + 1);
+                                                item.setPrice(p.getPrice());
+                                                items.add(item);
+                                                BigDecimal itemTotal = p.getPrice().multiply(new BigDecimal(item.getQuantity()));
+                                                total = total.add(itemTotal);
                                         }
+                                        order.setItems(items);
                                         order.setTotal(total);
                                         orderRepository.save(order);
                                 }
                         }
+                }
+        }
+
+        private void seedFavicon() {
+                try {
+                        java.io.File logo = new java.io.File("src/main/resources/static/images/logo.png");
+                        java.io.File favicon = new java.io.File("src/main/resources/static/favicon.ico");
+                        if (logo.exists() && !favicon.exists()) {
+                                java.nio.file.Files.copy(logo.toPath(), favicon.toPath());
+                                System.out.println("Favicon created successfully in static folder!");
+                        }
+                        // Also copy to target directory so it is available immediately without rebuilding
+                        java.io.File targetFavicon = new java.io.File("target/classes/static/favicon.ico");
+                        if (logo.exists() && !targetFavicon.exists()) {
+                                targetFavicon.getParentFile().mkdirs();
+                                java.nio.file.Files.copy(logo.toPath(), targetFavicon.toPath());
+                                System.out.println("Favicon created successfully in target/classes!");
+                        }
+                } catch (Exception e) {
+                        System.err.println("Failed to copy favicon: " + e.getMessage());
                 }
         }
 }

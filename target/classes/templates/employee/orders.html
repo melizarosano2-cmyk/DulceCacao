@@ -24,6 +24,7 @@
                             <th>Cliente</th>
                             <th>Dirección</th>
                             <th>Teléfono</th>
+                            <th>Detalles</th>
                             <th>Fecha</th>
                             <th>Total</th>
                             <th>Estado</th>
@@ -36,6 +37,65 @@
                             <td th:text="${order.cliente.fullName}">Cliente</td>
                             <td th:text="${order.cliente.direccion}">Dirección</td>
                             <td th:text="${order.cliente.telefono}">Teléfono</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" th:data-bs-target="'#orderModal-' + ${order.id}">
+                                    Ver Detalle
+                                </button>
+                                
+                                <!-- Modal -->
+                                <div class="modal fade" th:id="'orderModal-' + ${order.id}" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                                            <div class="modal-header text-white" style="background: linear-gradient(135deg, var(--chocolate-dark) 0%, var(--chocolate-medium) 100%); border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                                                <h5 class="modal-title" id="orderModalLabel" th:text="'Pedido #' + ${order.id}">Pedido #1</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4 text-start" style="color: var(--chocolate-dark);">
+                                                <div class="mb-3">
+                                                    <p class="mb-1"><strong>Cliente:</strong> <span th:text="${order.cliente.fullName}">Nombre</span></p>
+                                                    <p class="mb-1"><strong>Dirección:</strong> <span th:text="${order.cliente.direccion}">Dirección</span></p>
+                                                    <p class="mb-1"><strong>Teléfono:</strong> <span th:text="${order.cliente.telefono}">Teléfono</span></p>
+                                                    <p class="mb-1"><strong>Fecha:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2025 12:00</span></p>
+                                                </div>
+                                                
+                                                <h6 class="border-bottom pb-2 mb-3" style="color: var(--chocolate-medium);">Productos del Pedido</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover align-middle">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Producto</th>
+                                                                <th class="text-center">Cant.</th>
+                                                                <th class="text-end">Precio Unit.</th>
+                                                                <th class="text-end">Subtotal</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr th:each="item : ${order.items}">
+                                                                <td th:text="${item.product.name}">Producto</td>
+                                                                <td class="text-center" th:text="${item.quantity}">1</td>
+                                                                <td class="text-end" th:text="${'$' + item.price}">$0.00</td>
+                                                                <td class="text-end" th:text="${'$' + (item.price * item.quantity)}">$0.00</td>
+                                                            </tr>
+                                                            <tr th:if="${order.items == null || order.items.isEmpty()}">
+                                                                <td colspan="4" class="text-center text-muted">Sin detalles de productos</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th colspan="3" class="text-end">Total:</th>
+                                                                <th class="text-end text-chocolate" th:text="${'$' + order.total}">$0.00</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="border-top: none;">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
                             <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2025</td>
                             <td th:text="${'$' + order.total}">$0.00</td>
                             <td>

@@ -140,16 +140,17 @@ public class AdminController {
 
     @GetMapping("/employees/new")
     public String newEmployee(Model model) {
-        model.addAttribute("employee", new com.choco.shop.entity.User());
+        model.addAttribute("employee", new com.choco.shop.entity.Empleado());
         return "admin/employee_form";
     }
 
     @PostMapping("/employees")
-    public String saveEmployee(@ModelAttribute com.choco.shop.entity.User employee) {
+    public String saveEmployee(@ModelAttribute com.choco.shop.entity.Empleado employee) {
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         java.util.Set<com.choco.shop.entity.Role> roles = new java.util.HashSet<>();
         roleRepository.findByName("ROLE_EMPLOYEE").ifPresent(roles::add);
         employee.setRoles(roles);
+        employee.setEmailVerified(true);
         userRepository.save(employee);
         return "redirect:/admin/employees";
     }

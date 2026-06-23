@@ -17,7 +17,7 @@ public class SecurityConfig {
                 http
                                 .authorizeRequests((requests) -> requests
                                                 .antMatchers("/", "/home", "/register", "/login", "/css/**", "/js/**",
-                                                                "/images/**", "/product/**", "/cart/**",
+                                                                "/images/**", "/favicon.ico", "/product/**", "/cart/**",
                                                                 "/verify-email**", "/verification-sent",
                                                                 "/forgot-password**", "/reset-password**",
                                                                 "/reset-sent",
@@ -32,6 +32,7 @@ public class SecurityConfig {
                                                 .anyRequest().authenticated())
                                 .formLogin((form) -> form
                                                 .loginPage("/login")
+                                                .failureUrl("/login?error=true")
                                                 .defaultSuccessUrl("/", true)
                                                 .permitAll())
                                 .logout((logout) -> logout.permitAll())
